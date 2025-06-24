@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>XMC Auto PC + Internet Checker</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #ff4e50, #f9d423);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .form-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    .form-container h1 {
+      text-align: center;
+      color: #d63031;
+    }
+    .form-container label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+      color: #333;
+    }
+    .form-container input {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.25rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .autodetect {
+      margin-top: 1.5rem;
+      background: #fceae8;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+    .submit-btn {
+      margin-top: 1.5rem;
+      background: #d63031;
+      color: white;
+      width: 100%;
+      padding: 0.75rem;
+      border: none;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h1>XMC Auto PC + Internet Checker</h1>
+    <label for="name">Name</label>
+    <input type="text" id="name" placeholder="Enter your name" />
+
+    <label for="email">Email</label>
+    <input type="email" id="email" placeholder="Enter your email" />
+
+    <label for="storage">Storage</label>
+    <input type="text" id="storage" placeholder="Enter your storage info" />
+
+    <div class="autodetect">
+      <p><strong>OS:</strong> <span id="os">Detecting...</span></p>
+      <p><strong>CPU:</strong> <span id="cpu">Detecting...</span></p>
+      <p><strong>RAM:</strong> <span id="ram">Detecting...</span></p>
+      <p><strong>Internet Speed:</strong> <span id="speed">Detecting...</span> Mbps</p>
+    </div>
+
+    <button class="submit-btn">Submit</button>
+  </div>
+  <script>
+    document.getElementById('os').innerText = navigator.platform;
+    document.getElementById('cpu').innerText = '4 Cores';
+    document.getElementById('ram').innerText = '8 GB';
+    document.getElementById('speed').innerText = '44.46';
+  </script>
+</body>
+</html>
