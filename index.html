@@ -3,145 +3,105 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>XMC PC + Internet Checker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>XMC Auto PC + Internet Scan</title>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <style>
     body {
-      background: linear-gradient(135deg, #ff4e50, #f9d423);
+      background: linear-gradient(to right, #ff416c, #ff4b2b);
       font-family: 'Segoe UI', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       margin: 0;
-      overflow: hidden;
+      padding: 0;
     }
-
     .container {
-      background: #1e1e1e;
-      color: #fff;
+      max-width: 400px;
+      background: #2c2c2c;
+      color: white;
+      margin: 50px auto;
       padding: 2rem;
       border-radius: 12px;
-      max-width: 500px;
-      width: 100%;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
     }
-
     h1 {
       text-align: center;
-      margin-bottom: 1.5rem;
       color: #fff;
+      margin-bottom: 2rem;
     }
-
-    label {
-      display: block;
-      margin-top: 1rem;
-      margin-bottom: 0.3rem;
-      font-weight: bold;
-      color: #ffcc00;
-    }
-
-    input {
+    input, button {
       width: 100%;
-      padding: 0.5rem;
-      border: none;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
       border-radius: 6px;
-      background: #2c2c2c;
-      color: #fff;
-    }
-
-    input[readonly] {
-      background: #444;
-    }
-
-    .btn {
-      background: #e63946;
-      color: #fff;
-      padding: 0.75rem;
       border: none;
-      border-radius: 6px;
-      margin-top: 1.5rem;
-      width: 100%;
       font-size: 1rem;
+    }
+    button {
+      background: #ff4b2b;
+      color: white;
       cursor: pointer;
     }
-
-    .btn:hover {
-      background: #d62828;
-    }
-
-    .note {
-      font-size: 0.85rem;
-      color: #ccc;
-      margin-top: 1rem;
+    .success {
+      background: #4CAF50;
+      color: white;
       text-align: center;
-    }
-
-    @media (max-width: 768px) {
-      body::before {
-        content: "Please access this page on a desktop PC.";
-        color: white;
-        font-size: 1.5rem;
-        position: absolute;
-        text-align: center;
-        padding: 2rem;
-        background: rgba(0,0,0,0.8);
-        z-index: 1000;
-        width: 100%;
-        height: 100%;
-      }
-
-      .container {
-        display: none;
-      }
+      padding: 0.5rem;
+      border-radius: 6px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>XMC PC + Internet Checker</h1>
-    <label for="name">Full Name</label>
-    <input type="text" id="name" placeholder="Enter your full name" />
+    <h1>XMC Auto PC + Internet Scan</h1>
+    <input type="text" id="name" placeholder="Full Name" required />
+    <input type="email" id="email" placeholder="Email Address" required />
+    <input type="text" id="storage" placeholder="e.g. 256GB SSD" required />
+    <button onclick="scanPC()">Scan My PC</button>
 
-    <label for="email">Email Address</label>
-    <input type="email" id="email" placeholder="Enter your email" />
-
-    <label for="storage">Storage</label>
-    <input type="text" id="storage" placeholder="e.g. 256GB SSD" />
-
-    <label for="os">Operating System</label>
-    <input type="text" id="os" readonly />
-
-    <label for="ram">RAM</label>
-    <input type="text" id="ram" readonly />
-
-    <label for="cpu">Processor</label>
-    <input type="text" id="cpu" placeholder="e.g. Intel i5, AMD Ryzen 5" />
-
-    <label for="internet">Internet Speed (Mbps)</label>
-    <input type="text" id="internet" placeholder="Input from Fast.com" />
-
-    <button class="btn" onclick="scanInfo()">Scan My PC</button>
-
-    <div class="note">
-      Open <a href="https://fast.com" target="_blank" style="color: #ffcc00;">Fast.com</a> to test speed manually and enter it above.
+    <div id="results" style="display:none;">
+      <p><strong>OS:</strong> <span id="os"></span></p>
+      <p><strong>CPU:</strong> <span id="cpu"></span></p>
+      <p><strong>RAM:</strong> <span id="ram"></span></p>
+      <input type="text" id="speed" placeholder="Internet Speed (e.g. 500 Mbps)" />
+      <button onclick="sendData()">Submit</button>
     </div>
+
+    <button onclick="window.open('https://fast.com','_blank')">Open Fast.com to Test Speed</button>
+    <div id="message"></div>
   </div>
 
   <script>
-    function getOSName() {
-      const userAgent = window.navigator.userAgent;
-      if (userAgent.indexOf("Win") !== -1) return "Windows";
-      if (userAgent.indexOf("Mac") !== -1) return "MacOS";
-      if (userAgent.indexOf("X11") !== -1) return "UNIX";
-      if (userAgent.indexOf("Linux") !== -1) return "Linux";
-      return "Unknown";
+    emailjs.init("dyNTzUVRGiaDSU0IR");
+
+    function scanPC() {
+      document.getElementById('os').textContent = navigator.platform;
+      document.getElementById('cpu').textContent = navigator.hardwareConcurrency + " logical cores";
+      document.getElementById('ram').textContent = (navigator.deviceMemory || 'Unknown') + " GB";
+      document.getElementById('results').style.display = 'block';
     }
 
-    function scanInfo() {
-      document.getElementById("os").value = getOSName();
-      const ramGB = navigator.deviceMemory || "N/A";
-      document.getElementById("ram").value = ramGB + " GB";
+    function sendData() {
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const storage = document.getElementById("storage").value;
+      const os = document.getElementById("os").textContent;
+      const cpu = document.getElementById("cpu").textContent;
+      const ram = document.getElementById("ram").textContent;
+      const speed = document.getElementById("speed").value;
+
+      emailjs.send("service_wcxrpw5", "template_o8f98qi", {
+        name: name,
+        email: email,
+        storage: storage,
+        os: os,
+        cpu: cpu,
+        ram: ram,
+        speed: speed
+      })
+      .then(() => {
+        document.getElementById("message").innerHTML = "<div class='success'>✅ Submitted successfully!</div>";
+      }, (error) => {
+        document.getElementById("message").innerHTML = "<div class='error'>❌ Failed to send: " + error.text + "</div>";
+      });
     }
   </script>
 </body>
